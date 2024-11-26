@@ -339,7 +339,7 @@ class HabitatSimInteractiveViewer(Application):
             "move_up",
         ]
 
-        action_space: Dict[str, habitat_sim.agent.ActionSpec] = {}
+        action_space: Dict[str, habitat_sim.agent.ActionSpec] = {} # 将字符串映射为agent动作的类型和范围
 
         # build our action space map
         for action in action_list:
@@ -462,10 +462,11 @@ class HabitatSimInteractiveViewer(Application):
         press: Dict[key.key, bool] = self.pressed
         act: Dict[key.key, str] = self.key_to_action
 
-        action_queue: List[str] = [act[k] for k, v in press.items() if v]
+        action_queue: List[str] = [act[k] for k, v in press.items() if v] # 创建动作列表，遍历 press.items()
+        # 中的每个键值对，检查值（v）是否为 True。如果值为 True，则将相应的动作（act[k]）添加到 action_queue 列表中
 
         for _ in range(int(repetitions)):
-            [agent.act(x) for x in action_queue]
+            [agent.act(x) for x in action_queue] # 执行动作列表
 
         # update the grabber transform when our agent is moved
         if self.mouse_grabber is not None:
@@ -656,7 +657,7 @@ class HabitatSimInteractiveViewer(Application):
 
         # update map of moving/looking keys which are currently pressed
         if key in self.pressed:
-            self.pressed[key] = True
+            self.pressed[key] = True  # 识别WASD等
         event.accepted = True
         self.redraw()
 
