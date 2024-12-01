@@ -191,7 +191,7 @@ class HabitatSimInteractiveViewer(Application):
         self.time_since_last_simulation = 0.0
         LoggingContext.reinitialize_from_env()
         logger.setLevel("INFO")
-        self.print_help_text()
+        # self.print_help_text()
 
     def draw_contact_debug(self, debug_line_render: Any):
         """
