@@ -1,7 +1,7 @@
 # Copyright (c) Meta Platforms, Inc. and its affiliates.
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-# fdasda
+
 import ctypes
 import math
 import os
@@ -95,7 +95,7 @@ class HabitatSimInteractiveViewer(Application):
             key.W: False,
             key.X: False,
             key.Z: False,
-        }
+        } # 若将Flase改为True则默认执行对应的操作
 
         # set up our movement key bindings map
         key = Application.KeyEvent.Key
@@ -339,7 +339,7 @@ class HabitatSimInteractiveViewer(Application):
             "move_up",
         ]
 
-        action_space: Dict[str, habitat_sim.agent.ActionSpec] = {}
+        action_space: Dict[str, habitat_sim.agent.ActionSpec] = {} # 将字符串映射为agent动作的类型和范围
 
         # build our action space map
         for action in action_list:
@@ -348,6 +348,13 @@ class HabitatSimInteractiveViewer(Application):
                 action, make_actuation_spec(actuation_spec_amt)
             )
             action_space[action] = action_spec
+        # 将上述代码段替换为下面的后按任何按键都将是右转
+        # for action in action_list:
+        #     actuation_spec_amt = LOOK
+        #     action_spec = make_action_spec(
+        #         "turn_right", make_actuation_spec(actuation_spec_amt)
+        #     )
+        #     action_space[action] = action_spec
 
         sensor_spec: List[habitat_sim.sensor.SensorSpec] = self.cfg.agents[
             self.agent_id
@@ -462,10 +469,11 @@ class HabitatSimInteractiveViewer(Application):
         press: Dict[key.key, bool] = self.pressed
         act: Dict[key.key, str] = self.key_to_action
 
-        action_queue: List[str] = [act[k] for k, v in press.items() if v]
+        action_queue: List[str] = [act[k] for k, v in press.items() if v] # 创建动作列表，遍历 press.items()
+        # 中的每个键值对，检查值（v）是否为 True。如果值为 True，则将相应的动作（act[k]）添加到 action_queue 列表中
 
         for _ in range(int(repetitions)):
-            [agent.act(x) for x in action_queue]
+            [agent.act(x) for x in action_queue] # 执行动作列表
 
         # update the grabber transform when our agent is moved
         if self.mouse_grabber is not None:
@@ -487,8 +495,12 @@ class HabitatSimInteractiveViewer(Application):
         key will be set to False for the next `self.move_and_look()` to update the current actions.
         """
         key = event.key
+
+        # print(key) # 输出结果Key.A,Key.W
         pressed = Application.KeyEvent.Key
+        # print(pressed) # 输出结果<class '_magnum.platform.glfw.Application.KeyEvent.Key'>
         mod = Application.InputEvent.Modifier
+        # print(mod) # 输出结果<class '_magnum.platform.glfw.Application.InputEvent.Modifier'>
 
         shift_pressed = bool(event.modifiers & mod.SHIFT)
         alt_pressed = bool(event.modifiers & mod.ALT)
@@ -545,17 +557,6 @@ class HabitatSimInteractiveViewer(Application):
             else:
                 self.simulating = not self.simulating
                 logger.info(f"Command: physics simulating set to {self.simulating}")
-
-        elif key == pressed.PERIOD:
-            if self.simulating:
-                logger.warn("Warning: physics simulation already running")
-            else:
-                self.simulate_single_step = True
-                logger.info("Command: physics step taken")
-
-        elif key == pressed.COMMA:
-            self.debug_bullet_draw = not self.debug_bullet_draw
-            logger.info(f"Command: toggle Bullet debug draw: {self.debug_bullet_draw}")
 
         elif key == pressed.C:
             if shift_pressed:
@@ -624,6 +625,7 @@ class HabitatSimInteractiveViewer(Application):
         elif key == pressed.V:
             self.invert_gravity()
             logger.info("Command: gravity inverted")
+
         elif key == pressed.N:
             # (default) - toggle navmesh visualization
             # NOTE: (+ALT) - re-sample the agent position on the NavMesh
@@ -656,7 +658,8 @@ class HabitatSimInteractiveViewer(Application):
 
         # update map of moving/looking keys which are currently pressed
         if key in self.pressed:
-            self.pressed[key] = True
+            self.pressed[key] = True  # 识别WASD等
+            # print(key)  # 输出结果为Key.A,Key.S等
         event.accepted = True
         self.redraw()
 
@@ -667,6 +670,7 @@ class HabitatSimInteractiveViewer(Application):
         be set to False for the next `self.move_and_look()` to update the current actions.
         """
         key = event.key
+        # print(key,"release")  # 输出结果Key.A release
 
         # update map of moving/looking keys which are currently pressed
         if key in self.pressed:
